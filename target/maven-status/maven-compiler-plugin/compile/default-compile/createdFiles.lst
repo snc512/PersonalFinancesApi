@@ -1,6 +1,7 @@
 com/example/personalfinancesapi/repository/CategoryRepository.class
 com/example/personalfinancesapi/controller/CategoryController.class
 com/example/personalfinancesapi/controller/ExpenseController.class
+com/example/personalfinancesapi/config/CorsConfig$1.class
 com/example/personalfinancesapi/Exceptions$ExpenseNotFoundException.class
 com/example/personalfinancesapi/service/ExpenseService.class
 com/example/personalfinancesapi/model/Expense.class
@@ -8,4 +9,5 @@ com/example/personalfinancesapi/model/Category.class
 com/example/personalfinancesapi/repository/ExpenseRepository.class
 com/example/personalfinancesapi/service/CategoryService.class
 com/example/personalfinancesapi/Exceptions.class
+com/example/personalfinancesapi/config/CorsConfig.class
 com/example/personalfinancesapi/PersonalFinancesApiApplication.class
