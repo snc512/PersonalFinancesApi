@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.personalfinancesapi.service.ExpenseService;
 import com.example.personalfinancesapi.model.Expense;
 import com.example.personalfinancesapi.Exceptions.ExpenseNotFoundException;
+import com.example.personalfinancesapi.dto.ExpenseWithCategoryDTO;
+import com.example.personalfinancesapi.exception.ErrorResponse;
+import com.example.personalfinancesapi.exception.InvalidDataException;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,20 +24,25 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
 @RestController
 @RequestMapping("/api/v1/expenses")
 public class ExpenseController {
+    private static final Logger logger = LoggerFactory.getLogger(ExpenseService.class);
+
   @Autowired
   private ExpenseService expenseService; 
   
   @GetMapping
-  public ResponseEntity<List<Expense>> getAllExpenses() {
-    return new ResponseEntity<List<Expense>>(expenseService.allExpenses(), HttpStatus.OK);
+  public ResponseEntity<List<ExpenseWithCategoryDTO>> getAllExpensesWithCategory() {
+    List<ExpenseWithCategoryDTO> expenseDTOs = expenseService.allExpensesWithCategory();
+    return new ResponseEntity<>(expenseDTOs, HttpStatus.OK);
   }
+
 
   @GetMapping("/{referenceNumber}")
   public ResponseEntity<Optional<Expense>> getSingleExpense(@PathVariable String referenceNumber) {
@@ -44,11 +52,15 @@ public class ExpenseController {
   @PostMapping
   public ResponseEntity<Expense> createExpense(@RequestBody Map<String, Object> expenseData) {
     try {
+        System.out.println("expenseData");
+        System.out.println(expenseData);
         Expense createdExpense = expenseService.createExpense(expenseData);
         return new ResponseEntity<>(createdExpense, HttpStatus.CREATED);
+    } catch (InvalidDataException ex) {
+        throw new InvalidDataException(HttpStatus.BAD_REQUEST, ex.getMessage());
     } catch (Exception e) {
-        // Handle the case where some fields are missing
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        logger.error("An error occurred: {}", e.getMessage(), e);
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
