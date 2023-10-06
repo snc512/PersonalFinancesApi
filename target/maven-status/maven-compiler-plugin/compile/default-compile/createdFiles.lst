@@ -6,8 +6,10 @@ com/example/personalfinancesapi/Exceptions$ExpenseNotFoundException.class
 com/example/personalfinancesapi/service/ExpenseService.class
 com/example/personalfinancesapi/model/Expense.class
 com/example/personalfinancesapi/model/Category.class
+com/example/personalfinancesapi/exception/GlobalExceptionHandler.class
 com/example/personalfinancesapi/repository/ExpenseRepository.class
 com/example/personalfinancesapi/service/CategoryService.class
 com/example/personalfinancesapi/Exceptions.class
 com/example/personalfinancesapi/config/CorsConfig.class
 com/example/personalfinancesapi/PersonalFinancesApiApplication.class
+com/example/personalfinancesapi/exception/ErrorResponse.class
