@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.personalfinancesapi.service.ExpenseService;
 import com.example.personalfinancesapi.model.Expense;
 import com.example.personalfinancesapi.Exceptions.ExpenseNotFoundException;
+import com.example.personalfinancesapi.dto.ExpenseWithCategoryDTO;
 import com.example.personalfinancesapi.exception.ErrorResponse;
 import com.example.personalfinancesapi.exception.InvalidDataException;
 
@@ -37,9 +38,11 @@ public class ExpenseController {
   private ExpenseService expenseService; 
   
   @GetMapping
-  public ResponseEntity<List<Expense>> getAllExpenses() {
-    return new ResponseEntity<List<Expense>>(expenseService.allExpenses(), HttpStatus.OK);
+  public ResponseEntity<List<ExpenseWithCategoryDTO>> getAllExpensesWithCategory() {
+    List<ExpenseWithCategoryDTO> expenseDTOs = expenseService.allExpensesWithCategory();
+    return new ResponseEntity<>(expenseDTOs, HttpStatus.OK);
   }
+
 
   @GetMapping("/{referenceNumber}")
   public ResponseEntity<Optional<Expense>> getSingleExpense(@PathVariable String referenceNumber) {

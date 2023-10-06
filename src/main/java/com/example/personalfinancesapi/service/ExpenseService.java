@@ -3,8 +3,12 @@ package com.example.personalfinancesapi.service;
 import org.springframework.stereotype.Service;
 
 import com.example.personalfinancesapi.Exceptions.ExpenseNotFoundException;
+import com.example.personalfinancesapi.dto.CategoryDTO;
+import com.example.personalfinancesapi.dto.ExpenseWithCategoryDTO;
 import com.example.personalfinancesapi.exception.InvalidDataException;
+import com.example.personalfinancesapi.model.Category;
 import com.example.personalfinancesapi.model.Expense;
+import com.example.personalfinancesapi.repository.CategoryRepository;
 import com.example.personalfinancesapi.repository.ExpenseRepository;
 
 import jakarta.validation.ConstraintViolation;
@@ -12,6 +16,7 @@ import jakarta.validation.Validator;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
@@ -22,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +40,9 @@ public class ExpenseService {
 
   @Autowired
   private ExpenseRepository expenseRepository;
+  
+  @Autowired
+  private CategoryRepository categoryRepository;
 
   @Autowired
   private Validator validator;
@@ -46,7 +55,7 @@ public class ExpenseService {
     return expenseRepository.findExpenseByReferenceNumber(referenceNumber);
   }
 
-  public LocalDateTime dateConverter(String dateString) {
+  private LocalDateTime dateConverter(String dateString) {
     if (dateString == null) {
       return null;
     }
@@ -63,6 +72,29 @@ public class ExpenseService {
     }
   }
 
+  private static Double convertToDouble(Object value) {
+    if (value == null) {
+        return null;
+    }
+
+    if (value instanceof Double) {
+        return (Double) value;
+    }
+
+    if (value instanceof Integer) {
+        return ((Integer) value).doubleValue();
+    }
+
+    if (value instanceof String) {
+        try {
+            return Double.parseDouble((String) value);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+    return null;
+}
+
   public Expense createExpense(Map<String, Object> expenseData) {
     // Extract data from the expenseData map
 
@@ -74,8 +106,9 @@ public class ExpenseService {
     LocalDateTime postDate = dateConverter(postDateString);
     String referenceNumber = (String) expenseData.get("referenceNumber");
     String description = (String) expenseData.get("description");
-    Double credits = (Double) expenseData.get("credits");
-    Double charges = (Double) expenseData.get("charges");
+    Double credits = convertToDouble(expenseData.get("credits"));
+
+    Double charges = convertToDouble(expenseData.get("charges"));
     String categoryIdString = (String) expenseData.get("categoryId");
     ObjectId categoryId = null;
 
@@ -122,4 +155,41 @@ public class ExpenseService {
       throw new ExpenseNotFoundException("Expense not found with ID: " + referenceNumber);
     }
   }
+
+  public List<ExpenseWithCategoryDTO> allExpensesWithCategory() {
+    List<Expense> expenses = expenseRepository.findAll();
+    return expenses.stream()
+        .map(this::mapToExpenseWithCategoryDTO)
+        .collect(Collectors.toList());
+  }
+
+  private ExpenseWithCategoryDTO mapToExpenseWithCategoryDTO(Expense expense) {
+    ExpenseWithCategoryDTO dto = new ExpenseWithCategoryDTO();
+    // Map basic expense properties to DTO
+    dto.setCardLast4(expense.getCardLast4());
+    dto.setTransDate(expense.getTransDate());
+    dto.setPostDate(expense.getPostDate());
+    dto.setReferenceNumber(expense.getReferenceNumber());
+    dto.setDescription(expense.getDescription());
+    dto.setCredits(expense.getCredits());
+    dto.setCharges(expense.getCharges());
+    System.out.println(expense.getCardLast4());
+
+    if (expense.getCategory() != null) {
+      Optional<Category> categoryOptional = categoryRepository.findById(expense.getCategory());
+  
+  
+      if (categoryOptional.isPresent()) {
+        Category category = categoryOptional.get();
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setName(category.getName()); 
+  
+        dto.setCategory(categoryDTO);
+      }
+    }
+
+    return dto;
+  }
+
+
 }

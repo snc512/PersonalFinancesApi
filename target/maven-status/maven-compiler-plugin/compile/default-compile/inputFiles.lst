@@ -1,7 +1,10 @@
 /Users/sahilchhugani/Developer/PersonalFinancesApi/src/main/java/com/example/personalfinancesapi/exception/GlobalExceptionHandler.java
 /Users/sahilchhugani/Developer/PersonalFinancesApi/src/main/java/com/example/personalfinancesapi/exception/InvalidDataException.java
+/Users/sahilchhugani/Developer/PersonalFinancesApi/src/main/java/com/example/personalfinancesapi/validation/NonNullCreditOrChargeValidator.java
+/Users/sahilchhugani/Developer/PersonalFinancesApi/src/main/java/com/example/personalfinancesapi/dto/CategoryDTO.java
 /Users/sahilchhugani/Developer/PersonalFinancesApi/src/main/java/com/example/personalfinancesapi/exception/ErrorResponse.java
 /Users/sahilchhugani/Developer/PersonalFinancesApi/src/main/java/com/example/personalfinancesapi/model/Expense.java
+/Users/sahilchhugani/Developer/PersonalFinancesApi/src/main/java/com/example/personalfinancesapi/dto/ExpenseWithCategoryDTO.java
 /Users/sahilchhugani/Developer/PersonalFinancesApi/src/main/java/com/example/personalfinancesapi/service/CategoryService.java
 /Users/sahilchhugani/Developer/PersonalFinancesApi/src/main/java/com/example/personalfinancesapi/repository/ExpenseRepository.java
 /Users/sahilchhugani/Developer/PersonalFinancesApi/src/main/java/com/example/personalfinancesapi/repository/CategoryRepository.java
@@ -9,6 +12,7 @@
 /Users/sahilchhugani/Developer/PersonalFinancesApi/src/main/java/com/example/personalfinancesapi/controller/CategoryController.java
 /Users/sahilchhugani/Developer/PersonalFinancesApi/src/main/java/com/example/personalfinancesapi/model/Category.java
 /Users/sahilchhugani/Developer/PersonalFinancesApi/src/main/java/com/example/personalfinancesapi/service/ExpenseService.java
+/Users/sahilchhugani/Developer/PersonalFinancesApi/src/main/java/com/example/personalfinancesapi/validation/NonNullCreditOrCharge.java
 /Users/sahilchhugani/Developer/PersonalFinancesApi/src/main/java/com/example/personalfinancesapi/config/CorsConfig.java
 /Users/sahilchhugani/Developer/PersonalFinancesApi/src/main/java/com/example/personalfinancesapi/Exceptions.java
 /Users/sahilchhugani/Developer/PersonalFinancesApi/src/main/java/com/example/personalfinancesapi/PersonalFinancesApiApplication.java
