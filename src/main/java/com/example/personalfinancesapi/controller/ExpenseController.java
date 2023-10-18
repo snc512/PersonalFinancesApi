@@ -27,6 +27,7 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 
 
 @RestController
@@ -38,8 +39,9 @@ public class ExpenseController {
   private ExpenseService expenseService; 
   
   @GetMapping
-  public ResponseEntity<List<ExpenseWithCategoryDTO>> getAllExpensesWithCategory() {
-    List<ExpenseWithCategoryDTO> expenseDTOs = expenseService.allExpensesWithCategory();
+  public ResponseEntity<List<ExpenseWithCategoryDTO>> getAllExpensesWithCategory(@RequestParam(name = "sortBy", defaultValue = "referenceNumber") String sortBy,
+            @RequestParam(name = "sortDirection", defaultValue = "ASC") Sort.Direction sortDirection) {
+    List<ExpenseWithCategoryDTO> expenseDTOs = expenseService.allExpensesWithCategory(sortBy, sortDirection);
     return new ResponseEntity<>(expenseDTOs, HttpStatus.OK);
   }
 
