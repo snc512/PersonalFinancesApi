@@ -16,6 +16,7 @@ import jakarta.validation.Validator;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
 
@@ -66,7 +67,7 @@ public class ExpenseService {
         LocalDateTime date = LocalDateTime.of(LocalDate.parse(dateString), LocalTime.of(0, 0));
         return date;
       } catch (DateTimeParseException ex) {
-        System.err.println("Error parsing date: " + ex.getMessage());
+        logger.error("Error parsing date: " + ex.getMessage());
         return null; 
       }
     }
@@ -113,7 +114,6 @@ public class ExpenseService {
     ObjectId categoryId = null;
 
     if (credits == null && charges == null) {
-      System.out.println("Getting in here");
       throw new InvalidDataException(HttpStatus.BAD_REQUEST, "Either 'credits' or 'charges' must be non-null.");
     }
 
@@ -156,8 +156,9 @@ public class ExpenseService {
     }
   }
 
-  public List<ExpenseWithCategoryDTO> allExpensesWithCategory() {
-    List<Expense> expenses = expenseRepository.findAll();
+  public List<ExpenseWithCategoryDTO> allExpensesWithCategory(String sortField, Sort.Direction sortDirection) {
+    Sort sort = Sort.by(sortDirection, sortField);
+    List<Expense> expenses = expenseRepository.findAll(sort);
     return expenses.stream()
         .map(this::mapToExpenseWithCategoryDTO)
         .collect(Collectors.toList());
@@ -173,7 +174,6 @@ public class ExpenseService {
     dto.setDescription(expense.getDescription());
     dto.setCredits(expense.getCredits());
     dto.setCharges(expense.getCharges());
-    System.out.println(expense.getCardLast4());
 
     if (expense.getCategory() != null) {
       Optional<Category> categoryOptional = categoryRepository.findById(expense.getCategory());
